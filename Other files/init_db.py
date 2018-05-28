@@ -15,7 +15,7 @@ DATABASE = '/tmp/waterings.db'
 
 conn = sqlite3.connect(DATABASE)
 
-with open('./schema.sql', 'r') as f:
+with open('/home/pi/schema.sql', 'r') as f:
     conn.executescript(f.read().decode('utf8'))
 
 conn.commit()
