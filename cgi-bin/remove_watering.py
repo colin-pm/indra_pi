@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
-
 import cgi
 import cgitb
 import sys
 import sqlite3
 cgitb.enable()
 
+DATABASE = '/tmp/waterings.db'
+
 success = False
 
-# Set up SQL command to remove watering from schedule
+# Parse input from
 form = cgi.FieldStorage()
-sql_cmd = 'DELETE FROM waterings WHERE id={}'.format(form.getvalue('watering'))
 
 # Connect to database and run SQL command
-
+conn = sqlite3.connect(DATABASE)
+cur = conn.execute('DELETE FROM waterings WHERE id=?', (form.getvalue('watering'),))
+if cur.rowcount == 1:
+    success = True
+conn.commit()
+conn.close()
 
 print('Content-type: text/html\r\n\r\n')
 sys.flush()
