@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Schedule Watering</title>
+</head>
+
+<body>
+  <h1>Schedule a watering</h1>
+  <form method="post" action="/cgi-bin/schedule_watering.cgi">
+    <h3><strong>Day: </strong></h3>
+    <SELECT NAME="day">
+      <OPTION>Sunday
+      <OPTION>Monday
+      <OPTION>Tuesday
+      <OPTION>Wednesday
+      <OPTION>Thursday
+      <OPTION>Friday
+      <OPTION>Saturday
+    </SELECT>
+    <br>
+    <h3><strong>Time: </strong></h3>
+    <SELECT NAME="hour">
+      <OPTION>01
+      <OPTION>02
+      <OPTION>03
+      <OPTION>04
+      <OPTION>05
+      <OPTION>06
+      <OPTION>07
+      <OPTION>08
+      <OPTION>09
+      <OPTION>10
+      <OPTION>11
+      <OPTION>12
+    </SELECT>
+    <strong>:</strong>
+    <SELECT NAME="minute">
+      <OPTION>00
+      <OPTION>01
+      <OPTION>02
+      <OPTION>03
+      <OPTION>04
+      <OPTION>05
+      <OPTION>06
+      <OPTION>07
+      <OPTION>08
+      <OPTION>09
+      <OPTION>10
+      <OPTION>11
+      <OPTION>12
+      <OPTION>13
+      <OPTION>14
+      <OPTION>15
+      <OPTION>16
+      <OPTION>17
+      <OPTION>18
+      <OPTION>19
+      <OPTION>20
+      <OPTION>21
+      <OPTION>22
+      <OPTION>23
+      <OPTION>24
+      <OPTION>25
+      <OPTION>26
+      <OPTION>27
+      <OPTION>28
+      <OPTION>29
+      <OPTION>30
+      <OPTION>31
+      <OPTION>32
+      <OPTION>33
+      <OPTION>34
+      <OPTION>35
+      <OPTION>36
+      <OPTION>37
+      <OPTION>38
+      <OPTION>39
+      <OPTION>40
+      <OPTION>41
+      <OPTION>42
+      <OPTION>43
+      <OPTION>44
+      <OPTION>45
+      <OPTION>46
+      <OPTION>47
+      <OPTION>48
+      <OPTION>49
+      <OPTION>50
+      <OPTION>51
+      <OPTION>52
+      <OPTION>53
+      <OPTION>54
+      <OPTION>55
+      <OPTION>56
+      <OPTION>57
+      <OPTION>58
+      <OPTION>59
+    </SELECT>
+    <SELECT NAME="period">
+      <OPTION>AM
+      <OPTION>PM
+    </SELECT>
+    <br>
+    <h3><strong>Duration (Minutes):</strong></h3>
+    <INPUT TYPE="TEXT" NAME="duration">
+    <br>
+    <br>
+    <INPUT TYPE="SUBMIT" NAME="submit" VALUE="Submit">
+    <br>
+  </form>
+</body>
+</html>
