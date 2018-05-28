@@ -17,6 +17,7 @@
         <th>Saturday</th>
       </tr>
       <tr>
+        {% for day in ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] %}
         <td>
           <table border="1px solid black">
             <tr>
@@ -24,151 +25,20 @@
               <td>Duration</td>
               <td>Action</td>
             </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
+            {% for watering in waterings[day] %}
+              <tr>
+                <td>{{ watering["hour"] }}:{{ watering["minute"] }} {{ watering["period"] }}</td>
+                <td>{{ watering["duration"] }}</td>
+                <td>
+                  <form action="cgi-bin/remove_watering.py">
+                    <input type="submit" value="Remove" name="watering" value="{{ watering["id"] }}"/>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
           </table>
         </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td>6:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td>6:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td>6:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td>
-          <table border="1px solid black">
-            <tr>
-              <td>Time</td>
-              <td>Duration</td>
-              <td>Action</td>
-            </tr>
-            <tr>
-              <td>12:00 PM</td>
-              <td>30 min</td>
-              <td>
-                <form action="cgi-bin/remove_watering.py">
-                  <input type="submit" value="Remove" name="watering" value="id"/>
-                </form>
-              </td>
-            </tr>
-          </table>
+        {% endfor %}
         </td>
       </tr>
     </table>
