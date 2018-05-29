@@ -33,26 +33,41 @@ sys.stdout.flush()
 
 # Bool indicating if command was successful
 success = False
-# Parse input from
-form = cgi.FieldStorage()
-day = form.getvalue('day')
-hour = get_24hour(form.getvalue('hour'), form.getvalue('period'))
-minute = form.getvalue('minute')
-duration = check_duration(form.getvalue('duration'))
-if duration == "bad length" or duration == "out of range":
-    print('<h1>ERROR: Duration can only be in range of 1 to 300 minutes</h1>')
-    print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
-    quit()
-elif duration == "not int":
-    print('<h1>ERROR: Input is not an integer</h1>')
-    print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
-    quit()
-
 # Connect to database and run SQL command
 conn = sqlite3.connect(DATABASE)
-cur = conn.execute('INSERT INTO waterings (day, hour, minute, duration) VALUES (?, ?, ?, ?)', (day,hour,minute,duration))
-if cur.rowcount == 1:
-    success = True
+form = cgi.FieldStorage()
+day = form.getvalue('day')
+if isinstance(day, list):
+    for d in day:
+        hour = get_24hour(form.getvalue('hour'), form.getvalue('period'))
+        minute = form.getvalue('minute')
+        duration = check_duration(form.getvalue('duration'))
+        if duration == "bad length" or duration == "out of range":
+            print('<h1>ERROR: Duration can only be in range of 1 to 300 minutes</h1>')
+            print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
+            quit()
+        elif duration == "not int":
+            print('<h1>ERROR: Input is not an integer</h1>')
+            print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
+            quit()
+        cur = conn.execute('INSERT INTO waterings (day, hour, minute, duration) VALUES (?, ?, ?, ?)', (d,hour,minute,duration))
+        if cur.rowcount == 1:
+            success = True
+else:
+    hour = get_24hour(form.getvalue('hour'), form.getvalue('period'))
+    minute = form.getvalue('minute')
+    duration = check_duration(form.getvalue('duration'))
+    if duration == "bad length" or duration == "out of range":
+        print('<h1>ERROR: Duration can only be in range of 1 to 300 minutes</h1>')
+        print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
+        quit()
+    elif duration == "not int":
+        print('<h1>ERROR: Input is not an integer</h1>')
+        print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
+        quit()
+    cur = conn.execute('INSERT INTO waterings (day, hour, minute, duration) VALUES (?, ?, ?, ?)', (day,hour,minute,duration))
+    if cur.rowcount == 1:
+        success = True
 conn.commit()
 conn.close()
 

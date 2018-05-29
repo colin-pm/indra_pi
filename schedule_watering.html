@@ -7,16 +7,14 @@
 <body>
   <h1>Schedule a watering</h1>
   <form method="post" action="/cgi-bin/schedule_watering.py">
-    <h3><strong>Day: </strong></h3>
-    <SELECT NAME="day">
-      <OPTION value="1">Sunday
-      <OPTION value="2">Monday
-      <OPTION value="3">Tuesday
-      <OPTION value="4">Wednesday
-      <OPTION value="5">Thursday
-      <OPTION value="6">Friday
-      <OPTION value="7">Saturday
-    </SELECT>
+    <h3><strong>Day(s): </strong></h3>
+    <input type="checkbox" name="day" value="1">Sunday<br>
+    <input type="checkbox" name="day" value="2">Monday<br>
+    <input type="checkbox" name="day" value="3">Tuesday<br>
+    <input type="checkbox" name="day" value="4">Wednesday<br>
+    <input type="checkbox" name="day" value="5">Thursday<br>
+    <input type="checkbox" name="day" value="6">Friday<br>
+    <input type="checkbox" name="day" value="7">Saturday<br>
     <br>
     <h3><strong>Time: </strong></h3>
     <SELECT NAME="hour">
