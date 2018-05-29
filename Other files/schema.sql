@@ -1,4 +1,6 @@
-DROP TABLE IF EXISTS waterings
+DROP TABLE IF EXISTS waterings;
+
+PRAGMA journal_mode=WAL;
 
 CREATE TABLE waterings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -6,4 +8,4 @@ CREATE TABLE waterings (
   hour INTEGER NOT NULL,
   minute INTEGER NOT NULL,
   duration INTEGER NOT NULL
-)
+);

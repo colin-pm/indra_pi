@@ -21,11 +21,11 @@ conn.commit()
 conn.close()
 
 print('Content-type: text/html\r\n\r\n')
-sys.flush()
+sys.stdout.flush()
 
 if success:
     print('<h1>Watering has been removed from schedule</h1>')
 else:
-    print('<h1>ERROR: Not able to remove watering from schedule</h1>')
+    print('<h1>ERROR: Not able to remove watering from schedule (ID# {})</h1>'.format(form.getvalue('watering')))
 
-print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
+print('<br><form action="/cgi-bin/watering_schedule.py"><input type="Submit" value="Return"/></form>')

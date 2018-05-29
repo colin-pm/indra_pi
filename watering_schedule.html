@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <h1><strong>Watering Schedule</strong>     <form action="cgi-bin/schedule_watering.py">
+    <h1><strong>Watering Schedule</strong>     <form action="/schedule_watering.html">
       <input type="submit" value="Add"/>
     </form></h1>
     <table border="1px solid black">
@@ -32,8 +32,8 @@
                 <td>{{ watering["hour"] }}:{{ watering["minute"] }} {{ watering["period"] }}</td>
                 <td>{{ watering["duration"] }}</td>
                 <td>
-                  <form action="cgi-bin/remove_watering.py">
-                    <input type="submit" value="Remove" name="watering" value="{{ watering["id"] }}"/>
+                  <form action="/cgi-bin/remove_watering.py">
+                    <button type="submit" name="watering" value="{{ watering["id"] }}"/>Remove</button>
                   </form>
                 </td>
               </tr>

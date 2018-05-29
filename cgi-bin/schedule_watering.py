@@ -29,7 +29,7 @@ DATABASE = '/tmp/waterings.db'
 
 # Print header
 print('Content-type: text/html\r\n\r\n')
-sys.flush()
+sys.stdout.flush()
 
 # Bool indicating if command was successful
 success = False
@@ -43,7 +43,7 @@ if duration == "bad length" or duration == "out of range":
     print('<h1>ERROR: Duration can only be in range of 1 to 300 minutes</h1>')
     print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
     quit()
-elif duration == "not int"
+elif duration == "not int":
     print('<h1>ERROR: Input is not an integer</h1>')
     print('<br><form action="watering_schedule.html"><input type="Submit" value="Return"/></form>')
     quit()
@@ -61,5 +61,5 @@ if success:
 else:
     print('<h1>ERROR: Not able to add watering to schedule</h1>')
 
-print('<br><form action="schedule_watering.html"><input type="Submit" value="Add another watering to schedule"/></form>')
-print('<br><form action="watering_schedule.html"><input type="Submit" value="Return to schedule"/></form>')
+print('<br><form action="/schedule_watering.html"><input type="Submit" value="Add another watering to schedule"/></form>')
+print('<br><form action="/cgi-bin/watering_schedule.py"><input type="Submit" value="Return to schedule"/></form>')
