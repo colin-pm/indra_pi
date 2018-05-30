@@ -47,12 +47,12 @@ def watering_loop():
 
 def open_valve():
     cmd_payload = {'valve': 'open'}
-    mqttc.publish('indra/command/valve', json.dumps(cmd_payload))
+    mqttc.publish('indra/command/valve', json.dumps(cmd_payload), qos=2)
 
 
 def close_valve():
     cmd_payload = {'valve': 'closed'}
-    mqttc.publish('indra/command/valve', json.dumps(cmd_payload))
+    mqttc.publish('indra/command/valve', json.dumps(cmd_payload), qos=2)
 
 
 def received_valve_msg(client, userdata, message):
@@ -68,7 +68,7 @@ def init_mqtt():
     mqttc.connect(host=MQTT_HOST, port=MQTT_PORT, keepalive=MQTT_KEEPALIVE)
 
     # Register callback for messages when valve state has changed
-    mqttc.message_callback_add('indra/device/valve')
+    mqttc.message_callback_add('indra/device/valve', received_valve_msg)
     mqttc.loop_start()
 
 
