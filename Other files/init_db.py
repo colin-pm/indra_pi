@@ -21,3 +21,5 @@ with open('/home/pi/schema.sql', 'r') as f:
 
 conn.commit()
 conn.close()
+
+#TODO Give public write privaleges to database file
