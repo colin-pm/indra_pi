@@ -44,7 +44,6 @@ def watering_loop():
         time.sleep(60)
 
 
-
 def open_valve():
     cmd_payload = {'valve': 'open'}
     mqttc.publish('indra/command/valve', json.dumps(cmd_payload), qos=2)
