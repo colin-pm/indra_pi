@@ -6,11 +6,13 @@
 
 # Do not place this script in cgi-bin.  This should only be ran by an admin
 # to start the sqlite database
+#
+# This script should be ran with sudoers privileges on boot
 
 
 import sqlite3
-import os
 import os.path
+import stat
 
 DATABASE = '/tmp/waterings.db'
 
@@ -22,4 +24,4 @@ with open('/home/pi/schema.sql', 'r') as f:
 conn.commit()
 conn.close()
 
-#TODO Give public write privaleges to database file
+os.chmod(DATABASE, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
