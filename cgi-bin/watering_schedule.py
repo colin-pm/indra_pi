@@ -6,6 +6,7 @@ import sqlite3
 from jinja2 import Environment, FileSystemLoader, select_autoescape, PackageLoader
 cgitb.enable()
 
+
 def get_day(num):
     if num == 1: return 'sunday'
     if num == 2: return 'monday'
@@ -15,6 +16,7 @@ def get_day(num):
     if num == 6: return 'friday'
     if num == 7: return 'saturday'
 
+
 def get_hour(hour):
     if int(hour) == 0:
         return 12
@@ -22,6 +24,7 @@ def get_hour(hour):
         return int(hour) - 12
     else:
         return hour
+
 
 DATABASE = '/tmp/waterings.db'
 
@@ -45,6 +48,7 @@ for row in conn.execute('Select * FROM waterings ORDER BY hour, minute'):
 
 #Output webpage using jinja2
 print('Content-type: text/html\r\n\r\n')
+print('<form action="/index.html"><input type="Submit" value="Back"/></form><br>')
 sys.stdout.flush()
 env = Environment(loader=FileSystemLoader('/home/pi/templates/'), autoescape=select_autoescape(['html', 'xml']))
 template = env.get_template('watering_schedule.html')

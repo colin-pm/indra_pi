@@ -94,5 +94,9 @@ if __name__ == "__main__":
     # Ensure that the valve is closed before entering loop
     close_valve()
 
+    # Safety measure to ensure valve is online before entering loop
+    while valve == '':
+        time.sleep(20)
+
     # Start the loop to check for waterings
     watering_loop()

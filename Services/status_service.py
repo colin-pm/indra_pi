@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
+# This script will be set up to run on 1 minute intervals by cron
 import paho.mqtt.client as mqtt
-import sqlite3
 import time
-import os.path
 import json
-from datetime import date
 
-DATABASE = '/tmp/waterings.db'
+STATUS_FILE = '/tmp/status.json'
 MQTT_HOST = ''
 MQTT_CA_CERTS = ''
 MQTT_CERTFILE = ''
@@ -14,10 +12,8 @@ MQTT_KEYFILE = ''
 MQTT_PORT = 8883
 MQTT_KEEPALIVE = 60
 
-
-valve = ''
+status = False
 mqttc = None
-
 
 
 def init_mqtt():
@@ -28,20 +24,39 @@ def init_mqtt():
     mqttc.connect(host=MQTT_HOST, port=MQTT_PORT, keepalive=MQTT_KEEPALIVE)
 
     # Register callback for messages when valve state has changed
-    mqttc.message_callback_add('indra/device/valve', received_valve_msg)
+    mqttc.message_callback_add('indra/device/status', received_status)
     mqttc.loop_start()
 
 
-if __name__ == "__main__":
-    # Wait for database file to be created if it does not exist yet
-    while not os.path.isfile(DATABASE):
-        time.sleep(1)
+def create_status_file(data):
+    with open(STATUS_FILE, 'w+') as f:
+        f.write(json.dumps(data))
 
+
+def received_status(client, userdata, message):
+    global status
+    response = json.loads(message.payload)
+    response['timestamp'] = time.asctime(time.localtime(time.time()))
+    status = True
+
+
+def request_status():
+    global mqttc
+    mqttc.publish('indra/command/status',
+                  json.dumps(['valve']),
+                  qos=2)
+
+
+if __name__ == "__main__":
     # Initialize the mqtt client
+    count = 0
     init_mqtt()
 
-    # Ensure that the valve is closed before entering loop
-    close_valve()
+    request_status()
 
-    # Start the loop to check for waterings
-    watering_loop()
+    while not status or count < 5:
+        time.sleep(12)
+
+    if not status:
+        response = {'timestamp': time.asctime(time.localtime(time.time())), 'status': 'offline'}
+        create_status_file(response)

@@ -23,3 +23,8 @@ publish.single(MQTT_TOPIC,
                keepalive=60,
                tls=tls_dict,
                transport="tcp")
+
+print('Content-type: text/html\r\n\r\n')
+print('<h1>Open valve command has been sent.</h1>')
+print('<h3>Note: Status page may not reflect new valve state for up to one minute')
+print('<br><form action="/cgi-bin/get_status.py"><input type="Submit" value="Return"/></form>')
