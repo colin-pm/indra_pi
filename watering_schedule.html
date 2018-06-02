@@ -5,14 +5,8 @@
 </head>
 
 <body>
-    <h1><strong>Watering Schedule</strong>
-      <form action="/schedule_watering.html">
-        <input type="submit" value="Add"/>
-      </form>
-      <form action="/cgi-bin/remove_all.py">
-        <input type="submit" value="Clear schedule"/>
-      </form>
-    </h1>
+    <h1><strong>Watering Schedule</strong></h1>
+    <form action="/index.html"><input type="Submit" value="Back"/></form><br>
     <table border="1px solid black">
       <tr>
         <th>Sunday</th>
@@ -49,5 +43,13 @@
         </td>
       </tr>
     </table>
+    <br>
+    <form action="/schedule_watering.html">
+      <input type="submit" value="Add to schedule"/>
+    </form>
+    <br>
+    <form action="/cgi-bin/remove_all.py">
+      <input type="submit" value="Clear schedule"/>
+    </form>
 </body>
 </html>

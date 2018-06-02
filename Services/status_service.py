@@ -6,45 +6,60 @@ import json
 
 STATUS_FILE = '/tmp/status.json'
 MQTT_HOST = ''
-MQTT_CA_CERTS = ''
-MQTT_CERTFILE = ''
-MQTT_KEYFILE = ''
+MQTT_CA_CERTS = '/home/pi/keys/root-CA.crt'
+MQTT_CERTFILE = '/home/pi/keys/control_server.cert.pem'
+MQTT_KEYFILE = '/home/pi/keys/control_server.private.key'
 MQTT_PORT = 8883
 MQTT_KEEPALIVE = 60
 
+DEBUG = False
+
 status = False
 mqttc = None
+response = {}
 
 
 def init_mqtt():
-    global mqttc
+    global mqttc, DEBUG
     # Init MQTT client
     mqttc = mqtt.Client()
     mqttc.tls_set(ca_certs=MQTT_CA_CERTS, certfile=MQTT_CERTFILE, keyfile=MQTT_KEYFILE)
     mqttc.connect(host=MQTT_HOST, port=MQTT_PORT, keepalive=MQTT_KEEPALIVE)
 
     # Register callback for messages when valve state has changed
-    mqttc.message_callback_add('indra/device/status', received_status)
     mqttc.loop_start()
+    mqttc.subscribe('indra/device/status', 0)
+    mqttc.message_callback_add('indra/device/status', received_status)
+    if DEBUG:
+        print('Initialized mqtt client')
 
 
 def create_status_file(data):
+    global DEBUG
     with open(STATUS_FILE, 'w+') as f:
         f.write(json.dumps(data))
+    if DEBUG:
+        print('Wrote JSON payload to {}'.format(STATUS_FILE))
 
 
 def received_status(client, userdata, message):
-    global status
-    response = json.loads(message.payload)
+    global status, DEBUG, response
+    if DEBUG:
+        print('Received message from endpoint device...')
+        print('"{}"'.format(message.payload.decode('UTF-8')))
+    response = json.loads(message.payload.decode('UTF-8'))
     response['timestamp'] = time.asctime(time.localtime(time.time()))
+    response['status'] = 'online'
     status = True
 
 
 def request_status():
-    global mqttc
+    global mqttc, DEBUG
     mqttc.publish('indra/command/status',
                   json.dumps(['valve']),
-                  qos=2)
+                  qos=1)
+    if DEBUG:
+        print('Sent status request message')
 
 
 if __name__ == "__main__":
@@ -54,9 +69,14 @@ if __name__ == "__main__":
 
     request_status()
 
-    while not status or count < 5:
+    while not status and count < 5:
+        if DEBUG:
+            print('Waited {} seconds for message'.format(count * 12))
         time.sleep(12)
+        count += 1
 
     if not status:
+        if DEBUG:
+            print('Never heard from endpoint device, assuming device is offline')
         response = {'timestamp': time.asctime(time.localtime(time.time())), 'status': 'offline'}
-        create_status_file(response)
+    create_status_file(response)

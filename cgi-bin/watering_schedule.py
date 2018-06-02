@@ -48,7 +48,6 @@ for row in conn.execute('Select * FROM waterings ORDER BY hour, minute'):
 
 #Output webpage using jinja2
 print('Content-type: text/html\r\n\r\n')
-print('<form action="/index.html"><input type="Submit" value="Back"/></form><br>')
 sys.stdout.flush()
 env = Environment(loader=FileSystemLoader('/home/pi/templates/'), autoescape=select_autoescape(['html', 'xml']))
 template = env.get_template('watering_schedule.html')
