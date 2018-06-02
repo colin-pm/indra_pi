@@ -5,8 +5,8 @@ import time
 import json
 
 STATUS_FILE = '/tmp/status.json'
-MQTT_HOST = '' # Add your own AWS address here
-MQTT_CA_CERTS = '' # Add your own certs here and below
+MQTT_HOST = '' # Insert own AWS host address, cert, & key files here
+MQTT_CA_CERTS = ''
 MQTT_CERTFILE = ''
 MQTT_KEYFILE = ''
 MQTT_PORT = 8883
@@ -67,16 +67,28 @@ if __name__ == "__main__":
     count = 0
     init_mqtt()
 
-    request_status()
+    while True:
+        status = False
 
-    while not status and count < 5:
-        if DEBUG:
-            print('Waited {} seconds for message'.format(count * 12))
-        time.sleep(12)
-        count += 1
+        # Query endpoint device for status
+        request_status()
 
-    if not status:
-        if DEBUG:
-            print('Never heard from endpoint device, assuming device is offline')
-        response = {'timestamp': time.asctime(time.localtime(time.time())), 'status': 'offline'}
-    create_status_file(response)
+        # Wait to hear from endpoint device
+        while not status and count < 5:
+            if DEBUG:
+                print('Waited {} seconds for message'.format(count * 12))
+            time.sleep(12)
+            count += 1
+
+        # Device is assumed to be ofline after wating for a minute
+        if not status:
+            if DEBUG:
+                print('Never heard from endpoint device, assuming device is offline')
+            response = {'timestamp': time.asctime(time.localtime(time.time())), 'status': 'offline'}
+
+        # Output status file
+        create_status_file(response)
+
+        #Wait for a minute if status was returned from endpoint device
+        if status:
+            time.sleep(60)

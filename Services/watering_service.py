@@ -7,8 +7,8 @@ import json
 from datetime import date
 
 DATABASE = '/tmp/waterings.db'
-MQTT_HOST = '' # Add your own AWS address here
-MQTT_CA_CERTS = '' # Add your own certs here and below
+MQTT_HOST = '' # Insert own AWS host address, cert, & key files here
+MQTT_CA_CERTS = ''
 MQTT_CERTFILE = ''
 MQTT_KEYFILE = ''
 MQTT_PORT = 8883
