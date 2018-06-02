@@ -5,10 +5,10 @@ import time
 import json
 
 STATUS_FILE = '/tmp/status.json'
-MQTT_HOST = ''
-MQTT_CA_CERTS = '/home/pi/keys/root-CA.crt'
-MQTT_CERTFILE = '/home/pi/keys/control_server.cert.pem'
-MQTT_KEYFILE = '/home/pi/keys/control_server.private.key'
+MQTT_HOST = '' # Add your own AWS address here
+MQTT_CA_CERTS = '' # Add your own certs here and below
+MQTT_CERTFILE = ''
+MQTT_KEYFILE = ''
 MQTT_PORT = 8883
 MQTT_KEEPALIVE = 60
 

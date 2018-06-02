@@ -14,8 +14,8 @@ if 'valve' in status:
     print('<h2>Valve state: {}</h2>'.format(status['valve']))
 if status['status'] == 'online':
     if status['valve'] == 'open':
-        print('<form action="/cgi-bin/close_valve.py"><input type="Submit" value="Close valve"/>')
+        print('<form action="/cgi-bin/close_valve.py"><input type="Submit" value="Close valve"/></form>')
     else:
-        print('<form action="/cgi-bin/open_valve.py"><input type="Submit" value="Open valve"/>')
-print('<br><br><form action="/index.html"><input type="Submit" value="Back"/>')
+        print('<form action="/cgi-bin/open_valve.py"><input type="Submit" value="Open valve"/></form>')
+print('<br><br><form action="/index.html"><input type="Submit" value="Back"/></form>')
 print('<br><br><p>Last updated at {}</p>'.format(status['timestamp']))
