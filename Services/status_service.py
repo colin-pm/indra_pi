@@ -4,16 +4,7 @@ import paho.mqtt.client as mqtt
 import time
 import json
 
-STATUS_FILE = '/tmp/status.json'
-MQTT_HOST = '' # Insert own AWS host address, cert, & key files here
-MQTT_CA_CERTS = ''
-MQTT_CERTFILE = ''
-MQTT_KEYFILE = ''
-MQTT_PORT = 8883
-MQTT_KEEPALIVE = 60
-
 DEBUG = False
-
 status = False
 mqttc = None
 response = {}

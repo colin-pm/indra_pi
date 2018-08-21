@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json
 
+# TODO Update to use device shadow
+
 STATUS_FILE = '/tmp/status.json'
 
 with open(STATUS_FILE, 'r') as f:
@@ -12,10 +14,5 @@ print('<h1>Indra Status</h1>')
 print('<h2>Valve status: {}</h2>'.format(status['status']))
 if 'valve' in status:
     print('<h2>Valve state: {}</h2>'.format(status['valve']))
-if status['status'] == 'online':
-    if status['valve'] == 'open':
-        print('<form action="/cgi-bin/close_valve.py"><input type="Submit" value="Close valve"/></form>')
-    else:
-        print('<form action="/cgi-bin/open_valve.py"><input type="Submit" value="Open valve"/></form>')
 print('<br><br><form action="/index.html"><input type="Submit" value="Back"/></form>')
 print('<br><br><p>Last updated at {}</p>'.format(status['timestamp']))

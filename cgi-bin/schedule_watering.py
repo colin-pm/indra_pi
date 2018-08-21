@@ -5,6 +5,7 @@ import sys
 import sqlite3
 cgitb.enable()
 
+
 def get_24hour(hour, period):
     if period == "PM":
         if hour != "12":
@@ -12,6 +13,7 @@ def get_24hour(hour, period):
     elif hour == "12":
             return '0'
     return hour
+
 
 def check_duration(duration):
     if len(duration) > 3:
@@ -23,6 +25,7 @@ def check_duration(duration):
     if int(duration) < 0 or int(duration) > 300:
         return "out of range"
     return duration
+
 
 # SQLITE database
 DATABASE = '/tmp/waterings.db'
