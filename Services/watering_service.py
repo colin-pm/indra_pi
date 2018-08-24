@@ -63,6 +63,8 @@ def get_waterings():
     schedule = [[] for _ in range(7)]
     for row in db.execute(command):
         schedule[row[0]].append(row[1:])
+    for day in schedule:
+        day.sort()
     return schedule
 
 
@@ -81,10 +83,6 @@ if __name__ == "__main__":
     # Create watchdog to send schedule whenever altered
     observer = Observer()
     observer.schedule(DatabaseWatcher, path.split(config['DATABASE'])[0], recursive=False)
-
-    # Wait for database file to be created if it does not exist yet
-    while not os.path.isfile(config['DATABASE']):
-        time.sleep(1)
 
     # Initialize the mqtt client
     initialize_client()
