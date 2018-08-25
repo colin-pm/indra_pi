@@ -33,7 +33,7 @@ for row in conn.execute('Select * FROM waterings ORDER BY hour, minute'):
     watering['hour'] = get_hour(row[2])
     watering['minute'] = "0" + str(row[3]) if len(str(row[3])) == 1 else str(row[3])
     watering['duration'] = row[4]
-    waterings[day].append(watering)
+    waterings[row[1]].append(watering)
 
 # Output webpage using jinja2
 print('Content-type: text/html\r\n\r\n')

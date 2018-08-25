@@ -14,15 +14,20 @@ from datetime import date
 CONFIG_PATH = '/home/pi/indra_server/config'
 LOG_PATH = '/tmp/watering_service.log'
 DEBUG_LVL = logging.INFO
+LAST_UPDATE = 0
 
 
 class DatabaseWatcher(FileSystemEventHandler):
     def on_created(self, event):
+        global LAST_UPDATE
         if event.src_path == config['DATABASE']:
+            LAST_UPDATE = time.time()
             send_schedule()
 
     def on_modified(self, event):
+        global LAST_UPDATE
         if event.src_path == config['DATABASE']:
+            LAST_UPDATE = time.time()
             send_schedule()
 
 
@@ -41,9 +46,20 @@ def initialize_client():
                   keepalive=config['MQTT_KEEPALIVE'])
     MQTTC.loop_start()
 
+    # Subscribe to topic for schedule requests
+    MQTTC.subscribe('indra/schedule_request', 0)
+    MQTTC.message_callback_add('indra/schedule_request', on_schedule_request)
+
+
+def on_schedule_request(client, userdata, message):
+    if LAST_UPDATE > float(json.loads(message.payload.decode('UTF-8'))):
+        send_schedule()
+
 
 def on_connect(client, userdata, flags, rc):
     log.info('Connected to AWS')
+    # Send schedule in case a request was missed
+    send_schedule()
 
 
 def on_disconnect(client, userdata, flags, rc):
@@ -58,7 +74,7 @@ def send_schedule():
 
 def get_waterings():
     global DEBUG
-    command = 'Select day, hour, minute, duration FROM waterings ORDER BY day, hour, minute'
+    command = 'SELECT day, hour, minute, duration FROM waterings ORDER BY day, hour, minute'
     db = sqlite3.connect(config['DATABASE'])
     schedule = [[] for _ in range(7)]
     for row in db.execute(command):
@@ -88,4 +104,4 @@ if __name__ == "__main__":
     initialize_client()
 
     while True:
-        time.sleep(10)
+        time.sleep(60)

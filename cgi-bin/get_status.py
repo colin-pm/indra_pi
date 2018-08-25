@@ -1,16 +1,27 @@
 #!/usr/bin/env python3
 import json
+import time
 import configparser
 from paho import mqtt
 
 STATUS_FILE = '/tmp/status.json'
 CONFIG_PATH = '/home/pi/indra_target/config'
 
+valve = None
+load = None
+uptime = None
+voltage = None
+speed = None
+
 
 def on_status_received(client, userdata, message):
+    global valve, load, uptime, voltage, speed
     payload = json.loads(message.payload.decode('UTF-8'))
-    status = payload['status']
-    timestamp = payload['timestamp']
+    valve = payload['valve']
+    load = payload['load']
+    uptime = payload['uptime']
+    voltage = payload['voltage']
+    speed = payload['speed']
 
 
 # Parse config file
@@ -32,13 +43,26 @@ MQTTC.subscribe('indra/status', 0)
 MQTTC.message_callback_add('indra/stats', on_status_received)
 
 # Publish request for status
-MQTTC.
+MQTTC.publish('indra/command',
+              payload='status',
+              qos=2)
 
 print('Content-type: text/html\r\n\r\n')
+for _ in range(10):
+    time.sleep(1)
+    if valve:
+        break
+else:
+    print('<h1>Indra Offline!</h1>')
 
-print('<h1>Indra Status</h1>')
-print('<h2>Valve status: {}</h2>'.format(status['status']))
-if 'valve' in status:
-    print('<h2>Valve state: {}</h2>'.format(status['valve']))
+if valve:
+    print('<h1>Indra Status</h1>')
+    print('<h2>Valve: {}</h2>'.format(valve))
+    print('<h2>Uptime: {}</h2>'.format(uptime))
+    print('<h2>CPU load: {}%</h2>'.format(float(load) * 100))
+    print('<h2>CPU voltage: {} V</h2>'.format(voltage))
+    print('<h2>CPU speed: {} MHz</h2>'.format(int(speed) / 1000000))
 print('<br><br><form action="/index.html"><input type="Submit" value="Back"/></form>')
-print('<br><br><p>Last updated at {}</p>'.format(status['timestamp']))
+
+MQTTC.loop_stop()
+MQTTC.disconnect()
