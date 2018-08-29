@@ -7,6 +7,12 @@ cgitb.enable()
 
 
 def get_24hour(hour, period):
+    """
+    Converts 12-hour time string to 24-hour
+    :param hour: string
+    :param period: either 'AM' or 'PM' string
+    :return: 24-hour string
+    """
     if period == "PM":
         if hour != "12":
             return str(int(hour) + 12)
@@ -16,6 +22,11 @@ def get_24hour(hour, period):
 
 
 def check_duration(duration):
+    """
+    Sanitizes input from text box
+    :param duration: Text box input
+    :return: Sanitized duration or error message
+    """
     if len(duration) > 3:
         return "bad length"
     try:

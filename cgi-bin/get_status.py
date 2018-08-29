@@ -4,16 +4,18 @@ import time
 import configparser
 import paho.mqtt.client as mqtt
 
+# Constants
 STATUS_FILE = '/tmp/status.json'
 CONFIG_PATH = '/home/pi/other_files/config'
 
+# Variables to hold values from status message
 valve = None
 load = None
 uptime = None
 voltage = None
 speed = None
 
-
+# Create callback for received status message
 def on_status_received(client, userdata, message):
     global valve, load, uptime, voltage, speed
     payload = json.loads(message.payload.decode('UTF-8'))
@@ -48,6 +50,7 @@ MQTTC.publish('indra/command',
               payload=json.dumps('status'),
               qos=1)
 
+# Create status page
 print('Content-type: text/html\r\n\r\n')
 for _ in range(10):
     time.sleep(1)
@@ -65,5 +68,6 @@ if valve:
     print('<h2>CPU speed: {} MHz</h2>'.format(int(speed) / 1000000))
 print('<br><br><form action="/index.html"><input type="Submit" value="Back"/></form>')
 
+# Disconnect broker
 MQTTC.loop_stop()
 MQTTC.disconnect()

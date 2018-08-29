@@ -8,6 +8,11 @@ cgitb.enable()
 
 
 def get_hour(hour):
+    """
+    Converts 24-hour to 12-hour
+    :param hour: 24-hour string
+    :return: 12-hour string
+    """
     if int(hour) == 0:
         return 12
     elif int(hour) > 12:

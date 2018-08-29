@@ -20,6 +20,7 @@ if cur.rowcount == 1:
 conn.commit()
 conn.close()
 
+# Create ack/nack page
 print('Content-type: text/html\r\n\r\n')
 sys.stdout.flush()
 
