@@ -2,10 +2,10 @@
 import json
 import time
 import configparser
-from paho import mqtt
+import paho.mqtt.client as mqtt
 
 STATUS_FILE = '/tmp/status.json'
-CONFIG_PATH = '/home/pi/indra_target/config'
+CONFIG_PATH = '/home/pi/other_files/config'
 
 valve = None
 load = None
@@ -27,6 +27,7 @@ def on_status_received(client, userdata, message):
 # Parse config file
 config = configparser.ConfigParser()
 config.read(CONFIG_PATH)
+config = config['DEFAULT']
 
 # Init MQTT client
 MQTTC = mqtt.Client()
@@ -34,8 +35,8 @@ MQTTC.tls_set(ca_certs=config['MQTT_CA_CERT'],
               certfile=config['MQTT_CERTFILE'],
               keyfile=config['MQTT_KEYFILE'])
 MQTTC.connect(host=config['MQTT_HOST'],
-              port=config['MQTT_PORT'],
-              keepalive=config['MQTT_KEEPALIVE'])
+              port=int(config['MQTT_PORT']),
+              keepalive=int(config['MQTT_KEEPALIVE']))
 MQTTC.loop_start()
 
 # Subscribe to topic for manual commands
@@ -44,8 +45,8 @@ MQTTC.message_callback_add('indra/stats', on_status_received)
 
 # Publish request for status
 MQTTC.publish('indra/command',
-              payload='status',
-              qos=2)
+              payload=json.dumps('status'),
+              qos=1)
 
 print('Content-type: text/html\r\n\r\n')
 for _ in range(10):
@@ -53,7 +54,7 @@ for _ in range(10):
     if valve:
         break
 else:
-    print('<h1>Indra Offline!</h1>')
+    print('<h1>Indra is offline!</h1>')
 
 if valve:
     print('<h1>Indra Status</h1>')

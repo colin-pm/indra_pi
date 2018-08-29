@@ -11,10 +11,11 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from datetime import date
 
-CONFIG_PATH = '/home/pi/indra_server/config'
+CONFIG_PATH = '/home/pi/other_files/config'
 LOG_PATH = '/tmp/watering_service.log'
-DEBUG_LVL = logging.INFO
-LAST_UPDATE = 0
+DEBUG_LVL = logging.DEBUG
+LAST_UPDATE = time.time()
+MQTTC = None
 
 
 class DatabaseWatcher(FileSystemEventHandler):
@@ -37,13 +38,12 @@ def initialize_client():
     # Init MQTT client
     MQTTC = mqtt.Client()
     MQTTC.on_connect = on_connect
-    MQTTC.on_disconnect = on_disconnect
     MQTTC.tls_set(ca_certs=config['MQTT_CA_CERT'],
                   certfile=config['MQTT_CERTFILE'],
                   keyfile=config['MQTT_KEYFILE'])
     MQTTC.connect(host=config['MQTT_HOST'],
-                  port=config['MQTT_PORT'],
-                  keepalive=config['MQTT_KEEPALIVE'])
+                  port=int(config['MQTT_PORT']),
+                  keepalive=int(config['MQTT_KEEPALIVE']))
     MQTTC.loop_start()
 
     # Subscribe to topic for schedule requests
@@ -52,6 +52,7 @@ def initialize_client():
 
 
 def on_schedule_request(client, userdata, message):
+    print(float(json.loads(message.payload.decode('UTF-8'))))
     if LAST_UPDATE > float(json.loads(message.payload.decode('UTF-8'))):
         send_schedule()
 
@@ -62,18 +63,13 @@ def on_connect(client, userdata, flags, rc):
     send_schedule()
 
 
-def on_disconnect(client, userdata, flags, rc):
-    log.info('Disconnected from AWS')
-
-
 def send_schedule():
-    MQTTC.publish(config['SCHEDULE_TOPIC'],
-                  payload=json.dumps({'waterings': get_waterings(), 'timestamp': time.time()}),
-                  qos=2)
+    MQTTC.publish('indra/schedule',
+                  payload=json.dumps({'waterings': get_waterings(), 'timestamp': LAST_UPDATE}),
+                  qos=1)
  
 
 def get_waterings():
-    global DEBUG
     command = 'SELECT day, hour, minute, duration FROM waterings ORDER BY day, hour, minute'
     db = sqlite3.connect(config['DATABASE'])
     schedule = [[] for _ in range(7)]
@@ -95,13 +91,15 @@ if __name__ == "__main__":
     # Parse config file
     config = configparser.ConfigParser()
     config.read(CONFIG_PATH)
+    config = config['DEFAULT']
 
     # Create watchdog to send schedule whenever altered
     observer = Observer()
-    observer.schedule(DatabaseWatcher, path.split(config['DATABASE'])[0], recursive=False)
+    observer.schedule(DatabaseWatcher(), path.split(config['DATABASE'])[0], recursive=False)
+    observer.start()
 
     # Initialize the mqtt client
     initialize_client()
 
     while True:
-        time.sleep(60)
+        time.sleep(1)
