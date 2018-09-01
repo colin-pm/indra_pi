@@ -72,8 +72,8 @@ def on_schedule_request(client, userdata, message):
     """
     Callback for messages received on schedule request topic.  Sends schedule as response.
     """
-    print(float(json.loads(message.payload.decode('UTF-8'))))
-    if LAST_UPDATE > float(json.loads(message.payload.decode('UTF-8'))):
+    print(float(json.loads(message.payload.decode('UTF-8'))['timestamp']))
+    if LAST_UPDATE > float(json.loads(message.payload.decode('UTF-8'))['timestamp']):
         send_schedule()
 
 
