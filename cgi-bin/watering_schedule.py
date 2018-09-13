@@ -32,6 +32,7 @@ waterings = {'sunday': [], 'monday': [], 'tuesday': [], 'wednesday': [], 'thursd
 # Place SQL data into dictionary object to use with jinja2
 for row in conn.execute('Select * FROM waterings ORDER BY hour, minute'):
     watering = dict()
+    watering['id'] = row[0]
     watering['day'] = days[row[1]]
     watering['period'] = "AM" if row[2] < 12 else "PM"
     watering['hour'] = get_hour(row[2])
