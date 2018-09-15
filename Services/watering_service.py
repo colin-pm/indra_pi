@@ -7,6 +7,7 @@ import logging
 import json
 import configparser
 from os import path
+from urllib import request
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from datetime import date
@@ -118,6 +119,18 @@ def get_day_num():
     return date.isoweekday(date.today()) if date.isoweekday(date.today()) != 7 else 0
 
 
+def check_connection():
+    """
+    Ensures network interface is connected to the web
+    :return: True if device is connected, else False
+    """
+    try:
+        request.urlopen('http://1.1.1.1', timeout=5)
+        return True
+    except Exception as e:
+        return False
+
+
 if __name__ == "__main__":
     # Create logging object
     log = logging.Logger(LOG_PATH, DEBUG_LVL)
@@ -131,6 +144,10 @@ if __name__ == "__main__":
     observer = Observer()
     observer.schedule(DatabaseWatcher(), path.split(config['DATABASE'])[0], recursive=False)
     observer.start()
+
+    # Wait for network interface to go up
+    while not check_connection():
+        time.sleep(1)
 
     # Initialize the mqtt client
     MQTTC = initialize_client()
