@@ -2,24 +2,41 @@
 <html>
 <head>
   <title>Indra Irrigation Controller</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <style>
+    #maindiv {
+      padding-top: 5%;
+      padding-right: 5%;
+      padding-bottom: 5%;
+      padding-left: 5%;
+    }
+    #centerdiv {
+      width: 90%;
+    }
+    body {
+      background-color: #595959;
+    }
+  </style>
 </head>
 
 <body>
-  <div align="center">
-    <img src="Indra_Splash_Logo.png" alt="Indra logo" width="300" height="255">
+  <div id="maindiv" align="center">
+    <img src="web_logo.png" alt="Indra logo" width="40%">
     <br>
     <br>
-    <form action="/cgi-bin/get_status.py">
-      <input type="submit" value="Check status / Manually control" />
-    </form>
-    <br>
-    <form action="/cgi-bin/watering_schedule.py">
-      <input type="submit" value="Check watering schedule" />
-    </form>
-    <br>
-    <form action="/schedule_watering.html">
-      <input type="submit" value="Schedule a watering" />
-    </form>
+    <div id="centerdiv">
+      <form action="/cgi-bin/get_status.py">
+        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check status" />
+      </form>
+      <br>
+      <form action="/cgi-bin/watering_schedule.py">
+        <input type="submit" height="60px" class="btn btn-primary btn-lg btn-block" value="Check watering schedule" />
+      </form>
+      <br>
+      <form action="/schedule_watering.html">
+        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Schedule a watering" />
+      </form>
+    </div>
   </div>
 </body>
 </html>
